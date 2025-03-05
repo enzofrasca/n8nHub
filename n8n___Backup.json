@@ -1,0 +1,1666 @@
+{
+  "name": "n8n | Backup",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "id": "67a5525a-2a31-41d9-b010-4866a02d8654",
+      "name": "Extract from File2",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        720,
+        -1320
+      ]
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "data.id",
+              "field2": "data.id"
+            }
+          ]
+        },
+        "resolve": "preferInput2",
+        "options": {}
+      },
+      "id": "a901e763-5230-4e98-a8d2-bd29ac82fb92",
+      "name": "Compare Datasets1",
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        920,
+        -1160
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $json.data }}",
+        "options": {}
+      },
+      "id": "07f017f8-a591-47d9-a45e-e7a8c52de3ce",
+      "name": "Workflow Edit",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        -1320
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $('Github Information').first().json.owner }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Github Information').first().json.repository }}",
+          "mode": "name"
+        },
+        "filePath": "=my-workflows/{{ $('Workflow Edit').item.json.id }}.json",
+        "binaryData": true,
+        "commitMessage": "={{ $now.toISO() }} | {{ $('Workflow Edit').item.json.name }}"
+      },
+      "id": "380bcffa-e214-4cf0-aa4c-0ee95ee3a7f2",
+      "name": "GitHub Edit",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        -1320
+      ],
+      "credentials": {
+        "githubApi": {
+          "id": "WnadbYEPWO4gwI7H",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "mode": "each",
+        "options": {
+          "format": true,
+          "fileName": "={{ $json.id }}.json"
+        }
+      },
+      "id": "8c86760e-7dcf-4384-9365-cda5ea540c68",
+      "name": "Convert to JSON - Edit",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1400,
+        -1320
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "mode": "each",
+        "options": {
+          "format": true,
+          "fileName": "={{ $json.name }}.json"
+        }
+      },
+      "id": "c77ca731-d91f-4d85-8732-c9034ae311e7",
+      "name": "Convert to JSON - Create",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1420,
+        -1100
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $('Github Information').first().json.owner }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Github Information').first().json.repository }}",
+          "mode": "name"
+        },
+        "filePath": "=my-workflows/{{ $('Workflow Create').item.json.id }}.json",
+        "binaryData": true,
+        "commitMessage": "={{ $now.toISO() }} | {{ $('Workflow Create').item.json.name }}"
+      },
+      "id": "b2b09dae-576f-4e6c-8932-352efad29596",
+      "name": "GitHub Create",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        -1100
+      ],
+      "credentials": {
+        "githubApi": {
+          "id": "WnadbYEPWO4gwI7H",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $json.data }}",
+        "options": {}
+      },
+      "id": "60ed3105-1118-43e5-99ab-916522732a58",
+      "name": "Workflow Create",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        -1100
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d55c571b-e214-48c5-9516-b16c71f5419e",
+              "name": "data",
+              "value": "={{ $json }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9b9895ae-a8ce-4ce2-a892-6fc76024d35f",
+      "name": "Parse Workflow",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        460,
+        -1120
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $('Github Information').item.json.owner }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Github Information').item.json.repository }}",
+          "mode": "name"
+        },
+        "filePath": "=my-workflows/{{ $json.id }}.json",
+        "additionalParameters": {}
+      },
+      "id": "ff71091b-fd16-4a02-839f-a0d9b7b783d5",
+      "name": "Get Github Workflows",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        460,
+        -1320
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "githubApi": {
+          "id": "WnadbYEPWO4gwI7H",
+          "name": "GitHub account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "id": "8c974394-e864-485c-8aa5-da920fbe2535",
+      "name": "Get n8n Workflows",
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        200,
+        -1220
+      ],
+      "credentials": {
+        "n8nApi": {
+          "id": "OQZmdCaA4ngrsSzc",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $('Github Information').first().json.owner }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Github Information').first().json.repository }}",
+          "mode": "name"
+        },
+        "filePath": "last-updated.json",
+        "additionalParameters": {}
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        -1220
+      ],
+      "id": "9f7f994d-5a81-4888-a213-4a88d5aa9889",
+      "name": "GitHub",
+      "executeOnce": true,
+      "credentials": {
+        "githubApi": {
+          "id": "WnadbYEPWO4gwI7H",
+          "name": "GitHub account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        -1340
+      ],
+      "id": "f73d5912-52fc-4650-b42a-91505efceda0",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "db106218-51ae-4ac1-8a2c-3cedf8caaf84",
+              "name": "workflow.id",
+              "value": "={{ $json.content.name }}",
+              "type": "string"
+            },
+            {
+              "id": "f1cc1267-d1a3-4aa3-977b-d1ecba06e968",
+              "name": "workflow.lastUpdated",
+              "value": "={{ $json.commit.message.split(' | ')[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "72cd6fad-c50c-4bdd-849f-594c1b7bf4c2",
+              "name": "workflow.name",
+              "value": "={{ $json.commit.message.substring($json.commit.message.indexOf(\"|\") + 1).trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1820,
+        -1220
+      ],
+      "id": "dab10c5e-bf88-436c-bdd7-53ea6765c41a",
+      "name": "Set Update Table"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8b41e7cc-5d5a-47b3-96b9-775dc07962a2",
+              "name": "currentTime",
+              "value": "={{ $json.data }}",
+              "type": "array"
+            },
+            {
+              "id": "09cfe142-3efe-4107-a542-1028c4c657a1",
+              "name": "updatedTime",
+              "value": "={{ $('Set Update Table').all() }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2400,
+        -1340
+      ],
+      "id": "073f6118-b8ce-4007-b861-01900d42f842",
+      "name": "Set Function Input"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $('Github Information').first().json.owner }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Github Information').first().json.repository }}",
+          "mode": "name"
+        },
+        "filePath": "last-updated.json",
+        "binaryData": true,
+        "commitMessage": "={{ $now.toISO() }}"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        2840,
+        -1080
+      ],
+      "id": "8d738cb8-8b7d-41a4-ba5a-51aba7074de9",
+      "name": "GitHub3",
+      "credentials": {
+        "githubApi": {
+          "id": "WnadbYEPWO4gwI7H",
+          "name": "GitHub account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "542e35b1-a3e6-4779-a36e-74d3036bbbc4",
+              "name": "=workflows",
+              "value": "={{ JSON.stringify($('Set Update Table').all().map(item => item.json.workflow)) }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2200,
+        -1080
+      ],
+      "id": "8e6fc72f-4609-41e9-9e6b-d9dcda92f644",
+      "name": "Set Function Input1"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "binaryPropertyName": "=data",
+        "options": {
+          "format": true
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2580,
+        -1080
+      ],
+      "id": "13506aa2-3f7a-428d-adc4-3c1dcb62addf",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the input data\nconst inputData = items[0]; // Access the main JSON object\n\n// Extract currentTime and updatedTime arrays\nconst currentTimeData = inputData.json.currentTime[0].workflows; // Correctly access workflows array\nconst updatedTimeData = inputData.json.updatedTime; // Access the updated workflow data\n\n// Create a mapping of workflow IDs to their lastUpdated values\nconst updatedTimeMap = {};\nupdatedTimeData.forEach(entry => {\n    const workflow = entry.json.workflow;\n    updatedTimeMap[workflow.id] = workflow.lastUpdated;\n});\n\n// Update the currentTime's lastUpdated field based on the updatedTime data\ncurrentTimeData.forEach(row => {\n    if (updatedTimeMap[row.id]) {\n        row.lastUpdated = updatedTimeMap[row.id]; // Update the lastUpdated value\n    }\n});\n\n// Return the updated structure, keeping the renamed fields\nreturn [\n    {\n        json: {\n            updatedData: currentTimeData, // Keep the updated workflows structure\n            timesReplaced: updatedTimeData // Keep the original workflow structure\n        }\n    }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2600,
+        -1340
+      ],
+      "id": "6d6fbe10-938d-43dd-ae90-feb70081a57a",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "binaryPropertyName": "=data",
+        "options": {
+          "format": true
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2980,
+        -1340
+      ],
+      "id": "267879e2-7fc1-4798-bf40-8d65c96b593f",
+      "name": "Convert to File2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f21d81c9-fa5a-4ae6-a619-f8f584bed698",
+              "name": "workflows",
+              "value": "={{ $json.updatedData }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2800,
+        -1340
+      ],
+      "id": "f81d13c9-1ff6-49e2-9a4a-8e3e44f532b8",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $('Github Information').first().json.owner }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Github Information').first().json.repository }}",
+          "mode": "name"
+        },
+        "filePath": "last-updated.json",
+        "binaryData": true,
+        "commitMessage": "={{ $now.toISO() }}"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        3180,
+        -1340
+      ],
+      "id": "ce607e86-11c0-41a2-a2f0-d2bd8e7f99ab",
+      "name": "GitHub5",
+      "credentials": {
+        "githubApi": {
+          "id": "WnadbYEPWO4gwI7H",
+          "name": "GitHub account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "=enzofrasca",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "=n8n",
+          "mode": "name"
+        },
+        "filePath": "last-updated.json",
+        "additionalParameters": {}
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        180,
+        -880
+      ],
+      "id": "22476c97-5be0-4348-9463-366709634b23",
+      "name": "GitHub1",
+      "executeOnce": true,
+      "credentials": {
+        "githubApi": {
+          "id": "WnadbYEPWO4gwI7H",
+          "name": "GitHub account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        440,
+        -900
+      ],
+      "id": "bf0024d2-1ea0-40cf-ad2d-7801e5b02b93",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        980,
+        -900
+      ],
+      "id": "5b3e13df-8949-4566-bc88-c52d2b90510e",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a80c9acb-3e3f-49e1-b18f-065933806a15",
+              "name": "workflows",
+              "value": "={{ $json.data[0].workflows }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        -900
+      ],
+      "id": "2a3d23e6-5523-47ef-ad81-56b98f79e45d",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/repos/enzofrasca/n8n/commits",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "path",
+              "value": "=my-workflows/{{ $json.query.id }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github+json"
+            },
+            {
+              "name": "X-GitHub-Api-Version",
+              "value": "2022-11-28"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        180,
+        -680
+      ],
+      "id": "bb7dac05-1f55-4022-98ae-b0268538aa55",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "DGWmZkHmx8sbHdWP",
+          "name": "Unnamed credential"
+        },
+        "httpHeaderAuth": {
+          "id": "oHFD3b1zWDRMwZux",
+          "name": "Github"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a80c9acb-3e3f-49e1-b18f-065933806a15",
+              "name": "date",
+              "value": "={{ $json.commit.message.split(' |' )[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "1fad8d06-4d72-4dd7-8e78-15fbfa0850d7",
+              "name": "id",
+              "value": "={{ $('Get Commits Webhook').item.json.query.id }}",
+              "type": "string"
+            },
+            {
+              "id": "afc3c2f5-8dba-420e-95d6-60f9a4f21c1e",
+              "name": "message",
+              "value": "={{ $json.sha }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        380,
+        -680
+      ],
+      "id": "af795e4a-0382-4fd6-8ed4-1e5e00890b83",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "62857ca6-9d24-4ebf-b908-a95ce7393949",
+              "leftValue": "={{ $json.date }}",
+              "rightValue": "=2",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        580,
+        -680
+      ],
+      "id": "7572111e-a58f-4201-97f9-cfeb03347553",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        980,
+        -700
+      ],
+      "id": "222722ca-6145-4641-a025-b7c08c2d6210",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        800,
+        -700
+      ],
+      "id": "7ca70ab3-320f-40b8-99c6-689e972178c4",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"success\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        3180,
+        -1100
+      ],
+      "id": "d2fd46f4-6e15-4ba9-9c4b-1cd8e8e2e8f1",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $('Github Information 3').item.json.owner }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Github Information 3').item.json.repository }}",
+          "mode": "name"
+        },
+        "filePath": "=my-workflows/{{ $('Restore Commit Webhook').item.json.query.id }}",
+        "additionalParameters": {
+          "reference": "={{ $('Restore Commit Webhook').item.json.query.message }}"
+        }
+      },
+      "id": "01fd5e19-97f5-4426-8a80-cfb9bc27a3c4",
+      "name": "Get Github Workflows1",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        140,
+        -400
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "githubApi": {
+          "id": "WnadbYEPWO4gwI7H",
+          "name": "GitHub account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "workflowObject": "={{ JSON.stringify($json.data) }}",
+        "requestOptions": {}
+      },
+      "id": "250ddb8a-7e17-47e0-bbaa-c7ce8088d471",
+      "name": "n8n",
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        820,
+        -400
+      ],
+      "credentials": {
+        "n8nApi": {
+          "id": "OQZmdCaA4ngrsSzc",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "id": "4e384a27-685a-414d-b3e5-22874bd2eb9f",
+      "name": "Extract from File4",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        380,
+        -400
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "id": "7345e903-21de-4ebd-bc43-78c6ec283823",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -260,
+        -1140
+      ]
+    },
+    {
+      "parameters": {
+        "path": "github-sync",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -260,
+        -1320
+      ],
+      "id": "049433f5-6e9c-4982-8dc7-f679db239949",
+      "name": "Sync Webhook",
+      "webhookId": "c7ac0b6d-d02b-4d64-b321-d97274df415b"
+    },
+    {
+      "parameters": {
+        "path": "github-commits",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -260,
+        -680
+      ],
+      "id": "36f3691f-2e12-4e5e-bc99-44977c6a33c5",
+      "name": "Get Commits Webhook",
+      "webhookId": "c7ac0b6d-d02b-4d64-b321-d97274df415b"
+    },
+    {
+      "parameters": {
+        "path": "github-commit-restore",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -260,
+        -400
+      ],
+      "id": "781de12e-a019-42d7-bc66-c798016c9490",
+      "name": "Restore Commit Webhook",
+      "webhookId": "c7ac0b6d-d02b-4d64-b321-d97274df415b"
+    },
+    {
+      "parameters": {
+        "path": "github-commit-download",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -260,
+        -160
+      ],
+      "id": "bf0d080e-5b10-4ea2-8711-19e7c870e7ed",
+      "name": "Download Commit Webhook",
+      "webhookId": "c7ac0b6d-d02b-4d64-b321-d97274df415b"
+    },
+    {
+      "parameters": {
+        "path": "github-workflows",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -260,
+        -880
+      ],
+      "id": "c3dae07c-4a14-4ba5-9eb8-318d513c026e",
+      "name": "Get Workflows Webhook",
+      "webhookId": "c7ac0b6d-d02b-4d64-b321-d97274df415b"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f468b1c6-9209-435d-a917-5edfc71d2c3d",
+              "name": "data.name",
+              "value": "={{ $json.data.name }} | {{ $json.data.updatedAt.toDateTime().format('yyyy-MM-dd | hh:mm') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        600,
+        -400
+      ],
+      "id": "9fcc2721-ea32-4f2f-8603-830f289b18d9",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "61df5ffb-7587-4ec0-a4ef-5d03168857c5",
+              "name": "owner",
+              "value": "enzofrasca",
+              "type": "string"
+            },
+            {
+              "id": "167893e5-9de8-4273-9fc3-3f2da550ebf7",
+              "name": "repository",
+              "value": "n8n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "11fe7c51-37b0-4266-9b5b-0b0ed8fb9527",
+      "name": "Github Information",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -20,
+        -1220
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "61df5ffb-7587-4ec0-a4ef-5d03168857c5",
+              "name": "owner",
+              "value": "enzofrasca",
+              "type": "string"
+            },
+            {
+              "id": "167893e5-9de8-4273-9fc3-3f2da550ebf7",
+              "name": "repository",
+              "value": "n8n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2e4124de-91c9-45b4-a848-6be76bde51e8",
+      "name": "Github Information 3",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -60,
+        -400
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $('Github Information 4').item.json.owner }}",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $('Github Information 4').item.json.repository }}",
+          "mode": "name"
+        },
+        "filePath": "=my-workflows/{{ $('Download Commit Webhook').item.json.query.id }}",
+        "additionalParameters": {
+          "reference": "={{ $('Download Commit Webhook').item.json.query.message }}"
+        }
+      },
+      "id": "7c763f3c-2def-4b09-838e-74394f9dea27",
+      "name": "Get Github Workflows2",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        140,
+        -160
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "githubApi": {
+          "id": "WnadbYEPWO4gwI7H",
+          "name": "GitHub account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "61df5ffb-7587-4ec0-a4ef-5d03168857c5",
+              "name": "owner",
+              "value": "enzofrasca",
+              "type": "string"
+            },
+            {
+              "id": "167893e5-9de8-4273-9fc3-3f2da550ebf7",
+              "name": "repository",
+              "value": "n8n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9f83b4a1-b038-42f5-85be-d8fdb067b97e",
+      "name": "Github Information 4",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -60,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        820,
+        -160
+      ],
+      "id": "9f62916b-e334-48e7-8ef7-c059863ae347",
+      "name": "Respond to Webhook3"
+    }
+  ],
+  "pinData": {
+    "Restore Commit Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "flow.breezway.com.br",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+            "cookie": "n8n-auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFjY2QyODIwLWM4NTQtNGE5MS04NDJiLWUwN2U4NWFhZGVhNSIsImhhc2giOiJSbTlYVExRUFZ6IiwiYnJvd3NlcklkIjoiUlFGbUtCeWM4VWtoZEdxa1kzbCtyV2F6MjBOekp3T1hNNSt3Y2J6bUc2cz0iLCJpYXQiOjE3NDA4NjA3NDUsImV4cCI6MTc0MTQ2NTU0NX0.lr8LCMOYaGmAmdwqJkLZL0sOQX7ejY0F3GDHzpIWlr4; rl_page_init_referrer=RudderEncrypt%3AU2FsdGVkX1%2FFSfW4mY6Wipy5fJkyw2qm0IokCjxtqQg%3D; rl_page_init_referring_domain=RudderEncrypt%3AU2FsdGVkX19hLaBSof76iQb42CWLGAwuuFwtguSiMXs%3D; rl_anonymous_id=RudderEncrypt%3AU2FsdGVkX19nvX6qR%2FeXWfRQ%2FuI0kAqYoLmMqHsqfUSeYDYKVgx1jSLCfPqw2O4D8DAFCqBms9owmVCG%2BdRpOA%3D%3D; rl_user_id=RudderEncrypt%3AU2FsdGVkX19JUah%2BqsxwCRi8pTWnpgy7BdAFWYKmNB1C5jqFRjPwlOSNQTVRou%2B3iZ9yXzuERjvcEOf4SgRfmRBGWkwBo%2FD%2BbxsoFF4c152rekQOLLbGo3yV7adyFFUCbEzK731WAs%2F1DTqPTiXkpI3qQ1mYhUy3diivwnxqSj0%3D; rl_trait=RudderEncrypt%3AU2FsdGVkX19FXKRpWwZOQzUJiDvUmBq27PE7gSHCJyXZCqoB7nJuJ4Ly718qIePHpZedhDXB0IuHpnWzblKYLmmEnEx548%2FLw5xHoQqMRSH878Mg6vEDIF7rpsY1ph05IdCCTI%2BfMg%2Fw24l9WDepcg%3D%3D; ph_phc_4URIAm1uYfJO7j8kWSe0J8lc8IqnstRLS7Jx8NcakHo_posthog=%7B%22distinct_id%22%3A%2238a1ee7bbdd91d837aec15ae92cc16f6fac3c4d9e269393880a11efb9058d914%23accd2820-c854-4a91-842b-e07e85aadea5%22%2C%22%24sesid%22%3A%5B1741186069219%2C%22019566c6-f2e3-7f21-b454-bd157b12af2c%22%2C1741186069219%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22https%3A%2F%2Fflow.breezway.com.br%2Fsignin%3Fredirect%3D%25252Fworkflow%25252FptVHhgX1jusgaTn7%22%7D%7D; rl_session=RudderEncrypt%3AU2FsdGVkX1%2B1dpQuRXcnFGD%2FWP6sN73kK9NfF6aHeakpBMR6KBCdeh8xsc94qdjYQxIZvq%2BQf%2FOExs8hOoR7HcQBGmcS9pn6iDY0mRtLlH7aevn8S2%2BTnQG1wFSh6JvCrebcU9bOEKeE4qvA65T%2FBQ%3D%3D",
+            "priority": "u=1, i",
+            "sec-ch-ua": "\"Not(A:Brand\";v=\"99\", \"Brave\";v=\"133\", \"Chromium\";v=\"133\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "none",
+            "sec-fetch-storage-access": "active",
+            "sec-gpc": "1",
+            "x-forwarded-for": "179.254.175.195",
+            "x-forwarded-host": "flow.breezway.com.br",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "8630da15fb0f",
+            "x-real-ip": "179.254.175.195"
+          },
+          "params": {},
+          "query": {
+            "id": "BUYTHQJPszpHhMXh.json",
+            "message": "8d03f6df0db74cdbf7064288a14950e5827e1622"
+          },
+          "body": {},
+          "webhookUrl": "https://web.breezway.com.br/webhook/github-commit-restore",
+          "executionMode": "production"
+        }
+      }
+    ],
+    "Download Commit Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "flow.breezway.com.br",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+            "cookie": "n8n-auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFjY2QyODIwLWM4NTQtNGE5MS04NDJiLWUwN2U4NWFhZGVhNSIsImhhc2giOiJSbTlYVExRUFZ6IiwiYnJvd3NlcklkIjoiUlFGbUtCeWM4VWtoZEdxa1kzbCtyV2F6MjBOekp3T1hNNSt3Y2J6bUc2cz0iLCJpYXQiOjE3NDA4NjA3NDUsImV4cCI6MTc0MTQ2NTU0NX0.lr8LCMOYaGmAmdwqJkLZL0sOQX7ejY0F3GDHzpIWlr4; rl_page_init_referrer=RudderEncrypt%3AU2FsdGVkX1%2FFSfW4mY6Wipy5fJkyw2qm0IokCjxtqQg%3D; rl_page_init_referring_domain=RudderEncrypt%3AU2FsdGVkX19hLaBSof76iQb42CWLGAwuuFwtguSiMXs%3D; rl_anonymous_id=RudderEncrypt%3AU2FsdGVkX1%2FJ2bO8TA6LVnkHkZOcrODeSlW2JWbxivxnqjqVr%2Fjmu84XqeNDC1WsU%2FOYm5ndAFR5tRXkYPwNxw%3D%3D; rl_user_id=RudderEncrypt%3AU2FsdGVkX183KX6DooKF1Oy6bOFzpGWxMe3%2FztOQDribo8X2yFgnG2nI%2BZvjgDkfAwOQlBhGS0LK%2BEBl8Mdgegy5%2BC4uAh208O9PNRjRK5%2FB59aZeC1EFqq%2B089zQaZ0XYXrR%2BExATYJxg5CYrU8eFPyeq4dsx%2Fyb%2FQxY0Ddeuk%3D; rl_trait=RudderEncrypt%3AU2FsdGVkX1%2B%2BhkwcXVKDNW7VD1e1ZyP6ASuX4D4Siv1VivNwjbTeCg61oRViP433FRjL%2BNuiILK2MbBhK%2Be1lFDqQIVsow%2FiHryIMzoZpr5kQh2VBe%2FVogMHBRPQjPSfpxTU3MgsIskP%2FxxIrCQaSQ%3D%3D; ph_phc_4URIAm1uYfJO7j8kWSe0J8lc8IqnstRLS7Jx8NcakHo_posthog=%7B%22distinct_id%22%3A%2238a1ee7bbdd91d837aec15ae92cc16f6fac3c4d9e269393880a11efb9058d914%23accd2820-c854-4a91-842b-e07e85aadea5%22%2C%22%24sesid%22%3A%5B1741190142087%2C%22019566f4-6eb5-7c0f-90fc-792c7e45bc72%22%2C1741189050037%5D%2C%22%24epp%22%3Atrue%2C%22%24initial_person_info%22%3A%7B%22r%22%3A%22%24direct%22%2C%22u%22%3A%22https%3A%2F%2Fflow.breezway.com.br%2Fsignin%3Fredirect%3D%25252Fworkflow%25252FptVHhgX1jusgaTn7%22%7D%7D; rl_session=RudderEncrypt%3AU2FsdGVkX19HzvQ8koRBDJC7IIR8B1Uf53JKYr%2FAQIlk8OxyaqiZGQphY%2BgRQEYMXs4wglCitUyOLT%2BtEv%2FEIBN3bZxZn%2FlF4jnpLavHQhxlVhlyeqdSuXcWK7E5WX3vQlRmMw3IajS4Qnf4CBVamw%3D%3D",
+            "priority": "u=1, i",
+            "sec-ch-ua": "\"Not(A:Brand\";v=\"99\", \"Brave\";v=\"133\", \"Chromium\";v=\"133\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "none",
+            "sec-fetch-storage-access": "active",
+            "sec-gpc": "1",
+            "x-forwarded-for": "179.254.175.195",
+            "x-forwarded-host": "flow.breezway.com.br",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "8630da15fb0f",
+            "x-real-ip": "179.254.175.195"
+          },
+          "params": {},
+          "query": {
+            "id": "LjW22cKO5sCooy2q.json",
+            "message": "204234cbfe47c9ba77180be2f3f46cec1f7983e6"
+          },
+          "body": {},
+          "webhookUrl": "https://web.breezway.com.br/webhook/github-commit-download",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Extract from File2": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compare Datasets1": {
+      "main": [
+        [],
+        [],
+        [
+          {
+            "node": "Workflow Edit",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow Create",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Edit": {
+      "main": [
+        [
+          {
+            "node": "Convert to JSON - Edit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to JSON - Edit": {
+      "main": [
+        [
+          {
+            "node": "GitHub Edit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to JSON - Create": {
+      "main": [
+        [
+          {
+            "node": "GitHub Create",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Create": {
+      "main": [
+        [
+          {
+            "node": "Convert to JSON - Create",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Workflow": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Get Github Workflows": {
+      "main": [
+        [
+          {
+            "node": "Extract from File2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get n8n Workflows": {
+      "main": [
+        [
+          {
+            "node": "Get Github Workflows",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Parse Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub Edit": {
+      "main": [
+        [
+          {
+            "node": "Set Update Table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Function Input1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Set Function Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub Create": {
+      "main": [
+        [
+          {
+            "node": "Set Update Table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Update Table": {
+      "main": [
+        [
+          {
+            "node": "GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Function Input1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "GitHub3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Function Input": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Convert to File2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File2": {
+      "main": [
+        [
+          {
+            "node": "GitHub5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub1": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub5": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub3": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Github Workflows1": {
+      "main": [
+        [
+          {
+            "node": "Extract from File4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Github Information",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sync Webhook": {
+      "main": [
+        [
+          {
+            "node": "Github Information",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Commits Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restore Commit Webhook": {
+      "main": [
+        [
+          {
+            "node": "Github Information 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Workflows Webhook": {
+      "main": [
+        [
+          {
+            "node": "GitHub1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File4": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "n8n",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Github Information": {
+      "main": [
+        [
+          {
+            "node": "Get n8n Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Github Information 3": {
+      "main": [
+        [
+          {
+            "node": "Get Github Workflows1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Github Workflows2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Github Information 4": {
+      "main": [
+        [
+          {
+            "node": "Get Github Workflows2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Commit Webhook": {
+      "main": [
+        [
+          {
+            "node": "Github Information 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "be34018c-8ee6-4c8b-922c-5fa56f2e07b1",
+  "meta": {
+    "instanceId": "38a1ee7bbdd91d837aec15ae92cc16f6fac3c4d9e269393880a11efb9058d914"
+  },
+  "id": "BUYTHQJPszpHhMXh",
+  "tags": []
+}
